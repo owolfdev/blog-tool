@@ -1,38 +1,35 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Fix:
 
-## Getting Started
+use session. only logged in users can alter blog posts.
+add database credentials users can use their own database. This way it's a useful tool.
 
-First, run the development server:
+find out why markdown coming from database is not being rendered with proper line breaks.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Blog Tool
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Blog Tool is a web-based project that provides a custom interface for users to input and manage their blog posts. The project aims to simplify the process of managing multiple blog posts by automating the scheduling of posts based on their status and publishing date.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+When a user logs into the Blog Tool platform, they are presented with a dashboard that displays all their current blog posts. From here, they can create new blog posts, edit existing ones, or delete posts they no longer need. The custom interface allows users to easily input all the necessary information for a blog post, such as the post title, content, and publishing date.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Once a blog post has been created, Blog Tool automatically schedules it for publication based on its status and publishing date. If a post is marked as "draft," it will not be published until the user changes its status to "published." If a post is marked as "scheduled," it will be automatically published on the specified publishing date.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Blog Tool also provides users with the ability to manage their published posts. Users can easily view and edit published posts, as well as delete them if necessary.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+The MongoDB database used by Blog Tool allows for efficient storage and retrieval of blog posts, making it easy for users to manage large numbers of posts. The automated scheduling feature also helps to streamline the publishing process, reducing the amount of time and effort required to manage a blog.
 
-## Learn More
+Overall, Blog Tool is a powerful tool for bloggers and content creators who want to streamline their workflow and focus on creating high-quality content. By automating the scheduling and management of blog posts, this project makes it easier than ever to manage a successful blog.
 
-To learn more about Next.js, take a look at the following resources:
+Blog post Schema
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+    ```javascript
+    {
+    title: String,
+    author: String,
+    date: Date,
+    excerpt: String,
+    categories: [String],
+    description: String,
+    content: String,
+    status: String,
+    }
+    ```
