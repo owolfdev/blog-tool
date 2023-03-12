@@ -4,6 +4,14 @@ import rehypeRaw from "rehype-raw";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
+import {
+  useUser,
+  useSupabaseClient,
+  Session,
+  useSession,
+} from "@supabase/auth-helpers-react";
+import { useSupabase } from "../utils/supabase/useSupabase";
+import { useRouter } from "next/router";
 
 interface BlogPostData {
   id: string;
@@ -22,15 +30,34 @@ function Edit({ postData }: any) {
   const [markdown, setMarkdown] = useState("");
   const [publishedDate, setPublishedDate] = useState<Date | null>(null);
   const inputRefs = useRef<any>({});
+  const supabase = useSupabaseClient();
+  const user = useUser();
+  const session = useSession();
+  const router = useRouter();
+
+  const [authorized, setAuthorized] = useState(false);
+
+  const { updatePost } = useSupabase();
+
+  useEffect(() => {
+    // console.log("user", user);
+    // console.log("session", session);
+    if (user?.id === process.env.AUTHORIZED_USER) {
+      setAuthorized(true);
+    } else {
+      setAuthorized(false);
+    }
+    //console.log("authorized", authorized);
+  }, [user, session]);
 
   useEffect(() => {
     //console.log("Post data:", postData);
-    //setBlogPostData(postData);
+    setBlogPostData(postData);
   }, []);
 
   useEffect(() => {
-    setBlogPostData(postData[0]);
-    setPublishedDate(new Date(postData[0].published_date));
+    setBlogPostData(postData && postData[0]);
+    setPublishedDate(new Date(postData && postData[0]?.published_date));
   }, [postData]);
 
   useEffect(() => {
@@ -67,48 +94,33 @@ function Edit({ postData }: any) {
     console.log("Blog Post Data (handleSaveBlogPost): ", blogPostData);
 
     const data: BlogPostData = {
-      id: blogPostData.id ?? "",
-      title: blogPostData.title ?? "",
-      slug: blogPostData.slug ?? "",
-      author: blogPostData.author ?? "",
-      categories: blogPostData.categories ?? [],
-      published_date: blogPostData.published_date
-        ? new Date(blogPostData.published_date).toISOString()
+      id: blogPostData?.id ?? "",
+      title: blogPostData?.title ?? "",
+      slug: blogPostData?.slug ?? "",
+      author: blogPostData?.author ?? "",
+      categories: blogPostData?.categories ?? [],
+      published_date: blogPostData?.published_date
+        ? new Date(blogPostData?.published_date).toISOString()
         : "",
-      description: blogPostData.description ?? "",
-      excerpt: blogPostData.excerpt ?? "",
-      content: blogPostData.content ?? "",
+      description: blogPostData?.description ?? "",
+      excerpt: blogPostData?.excerpt ?? "",
+      content: blogPostData?.content ?? "",
     };
 
-    const response = await fetch("/api/edit-blog-post", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const response: any = await updatePost(data);
 
-    if (!response.ok) {
+    if (response) {
       console.error("Failed to save blog post");
     } else {
       console.log("Blog post saved");
-      //setBlogPostData({});
-      //setPublishedDate(null);
-      //setMarkdown("");
       var toast = document.getElementById("toast");
-      // Show the toast message using Tailwind classes
+
       toast?.classList.remove("hidden");
-      // Hide the toast message after 3 seconds using Tailwind classes
+
       setTimeout(function () {
         toast?.classList.add("hidden");
+        router.push(`/blog/${data.slug}`);
       }, 3000);
-      // Clear the input fields
-      //   inputRefs.current.title.value = "";
-      //   inputRefs.current.author.value = "";
-      //   inputRefs.current.categories.value = "";
-      //   inputRefs.current.description.value = "";
-      //   inputRefs.current.body.value = "";
-      //   inputRefs.current.excerpt.value = "";
     }
   };
 
@@ -122,7 +134,7 @@ function Edit({ postData }: any) {
         ref={(el) => (inputRefs.current.title = el)}
         placeholder="Title"
         onChange={handleInputChange}
-        value={blogPostData.title}
+        value={blogPostData?.title}
       />
       <input
         className="h-10 px-2 border-4 border-blue-500 rounded"
@@ -132,7 +144,7 @@ function Edit({ postData }: any) {
         ref={(el) => (inputRefs.current.slug = el)}
         placeholder="Slug"
         onChange={handleInputChange}
-        value={blogPostData.slug}
+        value={blogPostData?.slug}
       />
       <input
         className="h-10 px-2 border-4 border-blue-500 rounded"
@@ -142,7 +154,7 @@ function Edit({ postData }: any) {
         ref={(el) => (inputRefs.current.author = el)}
         placeholder="Author"
         onChange={handleInputChange}
-        value={blogPostData.author}
+        value={blogPostData?.author}
       />
       <input
         className="h-10 px-2 border-4 border-blue-500 rounded"
@@ -152,22 +164,18 @@ function Edit({ postData }: any) {
         ref={(el) => (inputRefs.current.categories = el)}
         placeholder="Categories. Separate with commas"
         onChange={handleInputChange}
-        value={blogPostData.categories}
+        value={blogPostData?.categories}
       />
       <div className="date-picker-container">
         <DatePicker
-          //popperPlacement="top-end"
           className="h-10 px-2 border-4 border-blue-500 rounded"
           id="published_date"
           name="published_date"
-          selected={publishedDate}
+          selected={moment(blogPostData?.published_date).toDate()}
           onChange={handleDateChange}
-          dateFormat="yyyy-MM-dd"
+          dateFormat="yyy-MM-dd"
           placeholderText="Published Date"
           showTimeSelect
-          value={
-            publishedDate ? moment(publishedDate).format("YYYY-MM-DD") : ""
-          }
         />
       </div>
       <textarea
@@ -181,7 +189,7 @@ function Edit({ postData }: any) {
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
           handleTextAreaChange(event)
         }
-        value={blogPostData.description}
+        value={blogPostData?.description}
       ></textarea>
       <textarea
         name="excerpt"
@@ -194,7 +202,7 @@ function Edit({ postData }: any) {
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
           handleTextAreaChange(event)
         }
-        value={blogPostData.excerpt}
+        value={blogPostData?.excerpt}
       ></textarea>
       <textarea
         name="content"
@@ -207,7 +215,7 @@ function Edit({ postData }: any) {
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
           handleTextAreaChange(event)
         }
-        value={blogPostData.content}
+        value={blogPostData?.content}
       ></textarea>
       <div>
         {markdown.length > 0 && (
@@ -232,8 +240,9 @@ function Edit({ postData }: any) {
         }}
       />
       <button
-        className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 "
+        className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 disabled:bg-gray-500 disabled:text-gray-300"
         onClick={handleEditBlogPost}
+        disabled={!session}
       >
         Edit Blog Post
       </button>

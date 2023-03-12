@@ -1,21 +1,24 @@
 const { createClient } = require("@supabase/supabase-js");
+// import { supabase } from "../../lib/supabaseClient";
+
 require("dotenv").config();
+
 const smmry = require("smmry")({
   SM_API_KEY: "AB9D0C21AC",
   SM_LENGTH: 2,
 });
 
-const supabase = createClient(
-  process.env.SUPABASE_URI,
-  process.env.SUPABASE_ANON_KEY
-);
-
 async function getPosts() {
   try {
-    let { data } = await supabase.from("posts").select();
-    //console.log("data from getPosts:", data);
+    const { data, error } = await supabase.from("posts").select();
+    if (error) {
+      throw error;
+    }
+
     return data;
-  } finally {
+  } catch (error) {
+    console.log("Error fetching posts:", error.message);
+    return null;
   }
 }
 
@@ -25,6 +28,9 @@ async function getPublishedPosts() {
       .from("posts")
       .select()
       .lte("published_date", new Date().toISOString());
+
+    console.log("data from getPublishedPosts:", data);
+
     return data;
   } finally {
   }
@@ -121,10 +127,6 @@ async function writeBlogPostToSupabase(data) {
   });
 }
 
-async function editBlogPostOnSupabase(data) {
-  updatePost(data);
-}
-
 // this function generates a slug from the title. We compare post titles to the title of existing posts to see if the title already exists. If it does, we append a number to the end of the slug. If it doesn't, we just return the slug. If there is more than one post with the same title, we append the number of posts with the same title to the end of the slug, to make it unique.
 async function generateSlug(title) {
   const slug = title
@@ -147,13 +149,10 @@ async function generateSlug(title) {
   return formattedSlug;
 }
 
-module.exports = {
-  getPosts,
-  getPost,
-  getPostsForTitleTest,
-  getPostsForSlugTest,
-  getPostForEdit,
-  writeBlogPostToSupabase,
-  editBlogPostOnSupabase,
-  getPublishedPosts,
-};
+export async function getAuthenticatedPosts() {
+  const { data: posts, error } = await supabase.from("posts").select("*");
+  if (error) {
+    throw error;
+  }
+  return posts;
+}

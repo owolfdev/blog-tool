@@ -5,6 +5,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 import remarkBreaks from "remark-breaks";
+import {
+  useUser,
+  useSupabaseClient,
+  Session,
+  useSession,
+} from "@supabase/auth-helpers-react";
+import { useSupabase } from "../utils/supabase/useSupabase";
 
 interface BlogPostData {
   title: string;
@@ -14,6 +21,7 @@ interface BlogPostData {
   description: string;
   excerpt: string;
   body: string;
+  author_email: string;
 }
 
 function Write() {
@@ -21,6 +29,25 @@ function Write() {
   const [markdown, setMarkdown] = useState("");
   const [publishedDate, setPublishedDate] = useState<Date | null>(null);
   const inputRefs = useRef<any>({});
+  const supabase = useSupabaseClient();
+  const user = useUser();
+  const session = useSession();
+
+  const [authorized, setAuthorized] = useState(false);
+
+  const { getPosts, getPublishedPosts, writeBlogPostToSupabase } =
+    useSupabase();
+
+  useEffect(() => {
+    console.log("user", user);
+    console.log("session", session);
+    if (user?.id === process.env.AUTHORIZED_USER) {
+      setAuthorized(true);
+    } else {
+      setAuthorized(false);
+    }
+    console.log("authorized", authorized);
+  }, [user, session]);
 
   useEffect(() => {
     console.log("Markdown:", markdown);
@@ -52,7 +79,7 @@ function Write() {
   }
 
   const handleSaveBlogPost = async () => {
-    console.log("Blog Post Data (handleSaveBlogPost): ", blogPostData);
+    //console.log("Blog Post Data (handleSaveBlogPost): ", blogPostData);
 
     const data: BlogPostData = {
       title: blogPostData.title ?? "",
@@ -64,17 +91,16 @@ function Write() {
       description: blogPostData.description ?? "",
       excerpt: blogPostData.excerpt ?? "",
       body: blogPostData.body ?? "",
+      author_email: user?.email ?? "",
     };
 
-    const response = await fetch("/api/save-blog-post", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    console.log("data from handleSaveBlogPost", data);
 
-    if (!response.ok) {
+    const response: any = await writeBlogPostToSupabase(data);
+
+    console.log("response from handleSaveBlogPost", response);
+
+    if (response) {
       console.error("Failed to save blog post");
     } else {
       console.log("Blog post saved");
@@ -99,7 +125,10 @@ function Write() {
   };
 
   return (
-    <div className="flex flex-col space-y-6">
+    <div className="flex flex-col space-y-1">
+      <label className="mt-0 mb-0" htmlFor="title">
+        Title:
+      </label>
       <input
         className="h-10 px-2 border-4 border-blue-500 rounded"
         type="text"
@@ -110,6 +139,9 @@ function Write() {
         onChange={handleInputChange}
         value={blogPostData.title}
       />
+      <label className="mt-0 mb-0" htmlFor="author">
+        Author:
+      </label>
       <input
         className="h-10 px-2 border-4 border-blue-500 rounded"
         type="text"
@@ -120,6 +152,9 @@ function Write() {
         onChange={handleInputChange}
         value={blogPostData.author}
       />
+      <label className="mt-0 mb-0" htmlFor="categories">
+        Categories:
+      </label>
       <input
         className="h-10 px-2 border-4 border-blue-500 rounded"
         type="text"
@@ -130,6 +165,9 @@ function Write() {
         onChange={handleInputChange}
         value={blogPostData.categories}
       />
+      <label className="mt-0 mb-0" htmlFor="publishedDate">
+        Published Date:
+      </label>
       <div className="date-picker-container">
         <DatePicker
           //popperPlacement="top-end"
@@ -143,6 +181,9 @@ function Write() {
           showTimeSelect
         />
       </div>
+      <label className="mt-0 mb-0" htmlFor="description">
+        Description:
+      </label>
       <textarea
         name="description"
         id="description"
@@ -156,6 +197,9 @@ function Write() {
         }
         value={blogPostData.description}
       ></textarea>
+      <label className="mt-0 mb-0" htmlFor="excerpt">
+        Excerpt:
+      </label>
       <textarea
         name="excerpt"
         id="excerpt"
@@ -169,6 +213,9 @@ function Write() {
         }
         value={blogPostData.excerpt}
       ></textarea>
+      <label className="mt-0 mb-0" htmlFor="body">
+        Content:
+      </label>
       <textarea
         name="body"
         id="body"
@@ -205,8 +252,9 @@ function Write() {
         }}
       />
       <button
-        className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 "
+        className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 disabled:bg-gray-500 disabled:text-gray-300"
         onClick={handleSaveBlogPost}
+        disabled={!session}
       >
         Save Blog Post
       </button>
