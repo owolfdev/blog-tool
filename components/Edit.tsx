@@ -91,7 +91,7 @@ function Edit({ postData }: any) {
   }
 
   const handleEditBlogPost = async () => {
-    console.log("Blog Post Data (handleSaveBlogPost): ", blogPostData);
+    //console.log("Blog Post Data (handleSaveBlogPost): ", blogPostData);
 
     const data: BlogPostData = {
       id: blogPostData?.id ?? "",
@@ -125,7 +125,10 @@ function Edit({ postData }: any) {
   };
 
   return (
-    <div className="flex flex-col space-y-6">
+    <div className="flex flex-col space-y-1">
+      <label className="mt-0 mb-0" htmlFor="title">
+        Title:
+      </label>
       <input
         className="h-10 px-2 border-4 border-blue-500 rounded"
         type="text"
@@ -136,6 +139,9 @@ function Edit({ postData }: any) {
         onChange={handleInputChange}
         value={blogPostData?.title}
       />
+      <label className="mt-0 mb-0" htmlFor="slug">
+        Slug:
+      </label>
       <input
         className="h-10 px-2 border-4 border-blue-500 rounded"
         type="text"
@@ -146,6 +152,9 @@ function Edit({ postData }: any) {
         onChange={handleInputChange}
         value={blogPostData?.slug}
       />
+      <label className="mt-0 mb-0" htmlFor="author">
+        Author:
+      </label>
       <input
         className="h-10 px-2 border-4 border-blue-500 rounded"
         type="text"
@@ -156,6 +165,9 @@ function Edit({ postData }: any) {
         onChange={handleInputChange}
         value={blogPostData?.author}
       />
+      <label className="mt-0 mb-0" htmlFor="categories">
+        categories:
+      </label>
       <input
         className="h-10 px-2 border-4 border-blue-500 rounded"
         type="text"
@@ -166,6 +178,9 @@ function Edit({ postData }: any) {
         onChange={handleInputChange}
         value={blogPostData?.categories}
       />
+      <label className="mt-0 mb-0" htmlFor="published_date">
+        Date:
+      </label>
       <div className="date-picker-container">
         <DatePicker
           className="h-10 px-2 border-4 border-blue-500 rounded"
@@ -178,6 +193,9 @@ function Edit({ postData }: any) {
           showTimeSelect
         />
       </div>
+      <label className="mt-0 mb-0" htmlFor="description">
+        Description:
+      </label>
       <textarea
         name="description"
         id="description"
@@ -191,6 +209,9 @@ function Edit({ postData }: any) {
         }
         value={blogPostData?.description}
       ></textarea>
+      <label className="mt-0 mb-0" htmlFor="excerpt">
+        Excerpt:
+      </label>
       <textarea
         name="excerpt"
         id="excerpt"
@@ -204,6 +225,9 @@ function Edit({ postData }: any) {
         }
         value={blogPostData?.excerpt}
       ></textarea>
+      <label className="mt-0 mb-0" htmlFor="content">
+        Content:
+      </label>
       <textarea
         name="content"
         id="content"
@@ -239,6 +263,7 @@ function Edit({ postData }: any) {
           // and so on for other heading levels
         }}
       />
+      <div className="h-5"></div>
       <button
         className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 disabled:bg-gray-500 disabled:text-gray-300"
         onClick={handleEditBlogPost}

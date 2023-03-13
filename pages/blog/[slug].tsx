@@ -36,15 +36,15 @@ export default function BlogsPage() {
     //console.log("router.query", router.query);
     const { slug } = router.query;
     getPost(slug).then((data: any) => {
-      console.log("data", data);
+      //console.log("data", data);
       setPostData(data);
     });
   }, []);
 
   const handleDelete = async () => {
-    console.log("delete post: ", post);
+    //console.log("delete post: ", post);
     await deletePost(post?.id);
-    console.log("deletedPost", post?.title);
+    //console.log("deletedPost", post?.title);
     router.push("/");
   };
 
@@ -56,6 +56,7 @@ export default function BlogsPage() {
           <div className="mb-5 text-sm text-gray-500">
             <p>Published Date: {formatDate(post?.published_date)}</p>
             <p>Author: {post?.author}</p>
+            <p>Post Id: {post?.id}</p>
           </div>
           <ReactMarkdown
             rehypePlugins={[rehypeRaw, remarkBreaks]}
@@ -63,7 +64,7 @@ export default function BlogsPage() {
             children={post?.content!}
             components={{
               h1: ({ children }) => (
-                <h2 className="mb-4 text-5xl font-bold">{children}</h2>
+                <h1 className="mb-4 text-5xl font-bold">{children}</h1>
               ),
               h2: ({ children }) => (
                 <h2 className="mb-4 text-3xl font-bold">{children}</h2>

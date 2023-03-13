@@ -13,13 +13,13 @@ export default function Home() {
 
   useEffect(() => {
     getPublishedPosts().then((data: any) => {
-      console.log("data", data);
+      //console.log("data", data);
       setPosts(data);
     });
   }, []);
 
   useEffect(() => {
-    console.log("publishedPosts", posts);
+    //console.log("publishedPosts", posts);
   }, [posts]);
 
   return (

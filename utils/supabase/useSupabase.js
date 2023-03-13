@@ -15,7 +15,10 @@ export const useSupabase = () => {
 
   async function getPosts() {
     try {
-      let { data, error, status } = await supabase.from("posts").select();
+      let { data, error, status } = await supabase
+        .from("posts")
+        .select()
+        .order("published_date", { ascending: false });
       if (error && status !== 406) {
         throw error;
       }
@@ -36,9 +39,10 @@ export const useSupabase = () => {
       let { data } = await supabase
         .from("posts")
         .select()
-        .lte("published_date", new Date().toISOString());
+        .lte("published_date", new Date().toISOString())
+        .order("published_date", { ascending: false });
 
-      console.log("data from getPublishedPosts:", data);
+      //console.log("data from getPublishedPosts:", data);
 
       return data;
     } finally {
@@ -82,7 +86,9 @@ export const useSupabase = () => {
     }
   }
 
-  async function updatePost(post) {
+  async function insertPostForEdit(post) {
+    //console.log("insertPost(post):", post);
+
     console.log("updatePost(post):", post);
     try {
       let { error } = await supabase
@@ -92,6 +98,14 @@ export const useSupabase = () => {
       console.log(error);
     } finally {
     }
+  }
+
+  async function updatePost(data) {
+    generateBlogPostForEdit(data).then((blogPost) => {
+      //console.log("blogPost:", blogPost);
+      insertPostForEdit(blogPost);
+      return blogPost;
+    });
   }
 
   async function deletePost(postId) {
@@ -114,13 +128,13 @@ export const useSupabase = () => {
       .toLowerCase()
       .replace(/[^\w\s]/gi, "")
       .replace(/\s+/g, "-");
-    console.log("slug:", slug);
+    //console.log("slug:", slug);
 
     const formattedSlug = await getPostsForSlugTest(title).then((data) => {
-      console.log("data from getPost:", data);
+      //console.log("data from getPost:", data);
       if (data.length > 0) {
-        console.log("data.length:", data.length);
-        console.log("slug + data.length:", slug + "-" + data.length);
+        //console.log("data.length:", data.length);
+        //console.log("slug + data.length:", slug + "-" + data.length);
         return slug + "-" + data.length;
       } else {
         return slug;
@@ -132,14 +146,15 @@ export const useSupabase = () => {
 
   // generate blog post object
   async function generateBlogPost(data) {
-    let excerpt = "";
-    if (data.body.length > 800) {
-      excerpt = (await smmry.summarizeText(data.body)).sm_api_content;
-    }
-    const categories = data.categories
-      .replaceAll(" ", "")
-      .toLowerCase()
-      .split(",");
+    // let excerpt = "";
+    // if (data.body.length > 800) {
+    //   excerpt = (await smmry.summarizeText(data.body)).sm_api_content;
+    // }
+    const cats = data.categories.toLowerCase().split(",");
+    const categories = cats.map((cat) => {
+      return cat.trim();
+    });
+
     //console.log("categories:", categories);
     // Create blog post object
     const blogPost = {
@@ -152,6 +167,44 @@ export const useSupabase = () => {
       description: data.description,
       excerpt: data.excerpt,
       content: data.body,
+    };
+    return blogPost;
+  }
+
+  async function generateBlogPostForEdit(data) {
+    // let excerpt = "";
+    // if (data.body.length > 800) {
+    //   excerpt = (await smmry.summarizeText(data.body)).sm_api_content;
+    // }
+
+    console.log("data:", data);
+
+    // console.log("categories", data.categories);
+    // console.log("typeof categories", typeof data.categories);
+    let categories;
+    if (typeof data.categories === "string") {
+      const cats = data.categories.toLowerCase().split(",");
+      categories = cats.map((cat) => {
+        return cat.trim();
+      });
+    } else {
+      categories = data.categories;
+    }
+
+    // console.log("categories:", categories);
+
+    // Create blog post object
+    const blogPost = {
+      id: data.id,
+      title: data.title,
+      slug: data.slug,
+      author: data.author,
+      author_email: data.author_email,
+      categories: categories,
+      published_date: data.publishedDate,
+      description: data.description,
+      excerpt: data.excerpt,
+      content: data.content,
     };
     return blogPost;
   }
