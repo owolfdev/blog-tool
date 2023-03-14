@@ -9,6 +9,7 @@ import {
 // import { Database } from "../utils/database.types";
 // type Profiles = Database["public"]["Tables"]["profiles"]["Row"];
 import { GiHamburgerMenu } from "react-icons/gi";
+import { useRouter } from "next/router";
 
 function Navigation() {
   const supabase = useSupabaseClient();
@@ -16,6 +17,7 @@ function Navigation() {
   const session = useSession();
   const [authorized, setAuthorized] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Add state variable for menu
+  const router = useRouter();
 
   useEffect(() => {
     // console.log("user", user);
@@ -69,6 +71,30 @@ function Navigation() {
     };
   }, [setIsMenuOpen]);
 
+  const handleMobileNavigate = (event: any) => {
+    setIsMenuOpen(false);
+    const id = event.target.id;
+    switch (id) {
+      case "home":
+        router.push("/");
+        break;
+      case "sign-in":
+        router.push("/signin");
+        break;
+      case "create":
+        router.push("/blog/create");
+        break;
+      case "all-posts":
+        router.push("/all-posts");
+        break;
+      case "settings":
+        router.push("/setting");
+        break;
+      default:
+        break;
+    }
+  };
+
   // return (
   //   <nav className="flex items-center px-5 py-5 space-x-8">
   //     <Link href={`/`}>
@@ -101,6 +127,7 @@ function Navigation() {
         <div className="hidden space-x-4 underline sm:flex">
           <Link href={`/blog/create`}>Create</Link>
           <Link href={`/all-posts`}>All Blog Posts</Link>
+          <Link href={`/setting`}>Setting</Link>
         </div>
       </div>
 
@@ -135,10 +162,27 @@ function Navigation() {
               className="fixed p-5 font-bold text-white bg-gray-500 border-2 border-black rounded top-12 right-5"
             >
               <div className="flex flex-col space-y-2">
-                <a href="#">Sign In</a>
-                <a href="#">Create</a>
-                <a href="#">All Posts</a>
-                <a href="#">Settings</a>
+                <div id="home" onClick={handleMobileNavigate}>
+                  Home
+                </div>
+                {!session ? (
+                  <div id="sign-in" onClick={handleMobileNavigate}>
+                    Sign In
+                  </div>
+                ) : (
+                  <div id="sign-in" onClick={() => supabase.auth.signOut()}>
+                    Sign Out
+                  </div>
+                )}
+                <div id="create" onClick={handleMobileNavigate}>
+                  Create
+                </div>
+                <div id="all-posts" onClick={handleMobileNavigate}>
+                  All Posts
+                </div>
+                <div id="settings" onClick={handleMobileNavigate}>
+                  Settings
+                </div>
               </div>
             </div>
           )}
