@@ -251,8 +251,9 @@ function Edit({ postData }: any) {
         skipHtml={false}
         children={markdown}
         components={{
+          p: ({ children }) => <p className="mb-4 ">{children}</p>,
           h1: ({ children }) => (
-            <h2 className="mb-4 text-5xl font-bold">{children}</h2>
+            <h1 className="mb-4 text-5xl font-bold">{children}</h1>
           ),
           h2: ({ children }) => (
             <h2 className="mb-4 text-3xl font-bold">{children}</h2>

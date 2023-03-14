@@ -45,7 +45,7 @@ export default function BlogsPage() {
     //console.log("delete post: ", post);
     await deletePost(post?.id);
     //console.log("deletedPost", post?.title);
-    router.push("/");
+    router.push("/all-posts");
   };
 
   return (
@@ -63,6 +63,7 @@ export default function BlogsPage() {
             skipHtml={false}
             children={post?.content!}
             components={{
+              p: ({ children }) => <p className="mb-4 ">{children}</p>,
               h1: ({ children }) => (
                 <h1 className="mb-4 text-5xl font-bold">{children}</h1>
               ),

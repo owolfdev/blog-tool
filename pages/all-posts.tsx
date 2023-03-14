@@ -1,28 +1,25 @@
-//import { getPosts, getPublishedPosts } from "../utils/supabase/sb-utils";
-import BlogPosts from "@/components/BlogPosts";
-import Layout from "@/components/Layout";
-import Navigation from "@/components/Navigation";
 import Link from "next/link";
+import Grid from "../components/Grid";
 import { useSupabase } from "../utils/supabase/useSupabase";
 import { useEffect, useState } from "react";
+import Layout from "../components/Layout";
 
-export default function AllPosts() {
+const GridPage = () => {
   const [posts, setPosts] = useState([]);
 
   const { getPosts } = useSupabase();
 
   useEffect(() => {
     getPosts().then((data: any) => {
-      console.log("data", data);
+      //console.log("data", data);
       setPosts(data);
     });
   }, []);
-
   return (
-    <>
-      <Layout title="All Blog Posts">
-        <BlogPosts posts={posts} />
-      </Layout>
-    </>
+    <Layout title="All Blog Posts">
+      <Grid posts={posts} />
+    </Layout>
   );
-}
+};
+
+export default GridPage;
