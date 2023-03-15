@@ -7,9 +7,10 @@ import { formatDate } from "../../utils/format-date";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkBreaks from "remark-breaks";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useSupabase } from "../../utils/supabase/useSupabase";
 import { useUser } from "@supabase/auth-helpers-react";
+import { DataContext } from "@/context/DataContext";
 
 interface Post {
   id: string;
@@ -26,6 +27,7 @@ export default function BlogsPage() {
   const [post, setPost] = useState<Post>();
   const user = useUser();
   const router = useRouter();
+  const dataContext = useContext(DataContext);
 
   useEffect(() => {
     //console.log("postData", postData);
@@ -57,6 +59,7 @@ export default function BlogsPage() {
             <p>Published Date: {formatDate(post?.published_date)}</p>
             <p>Author: {post?.author}</p>
             <p>Post Id: {post?.id}</p>
+            <p>Current Table: {dataContext.table} </p>
           </div>
           <ReactMarkdown
             rehypePlugins={[rehypeRaw, remarkBreaks]}
