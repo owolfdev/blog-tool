@@ -88,7 +88,7 @@ function Navigation() {
         router.push("/all-posts");
         break;
       case "settings":
-        router.push("/setting");
+        router.push("/settings");
         break;
       default:
         break;
