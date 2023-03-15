@@ -11,6 +11,7 @@ import { useEffect, useState, useContext } from "react";
 import { useSupabase } from "../../utils/supabase/useSupabase";
 import { useUser } from "@supabase/auth-helpers-react";
 import { DataContext } from "@/context/DataContext";
+import { countWords } from "../../utils/count-words";
 
 interface Post {
   id: string;
@@ -56,6 +57,7 @@ export default function BlogsPage() {
         <div className="mb-5">
           {/* {JSON.stringify(postData)} */}
           <div className="mb-5 text-sm text-gray-500">
+            <p>Word Count: {post?.content && countWords(post?.content)}</p>
             <p>Published Date: {formatDate(post?.published_date)}</p>
             <p>Author: {post?.author}</p>
             <p>Post Id: {post?.id}</p>

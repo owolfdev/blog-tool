@@ -19,6 +19,7 @@ import {
 } from "@supabase/auth-helpers-react";
 import { useSupabase } from "../utils/supabase/useSupabase";
 import { DataContext } from "@/context/DataContext";
+import { countWords } from "@/utils/count-words";
 
 interface BlogPostData {
   title: string;
@@ -230,7 +231,14 @@ function Write() {
           required
         ></textarea>
         <label className="mt-0 mb-0" htmlFor="body">
-          Content:
+          Content{" "}
+          {markdown.length > 0 && (
+            <span>
+              {" "}
+              {`(`}
+              {countWords(blogPostData.body)} words{`)`}:
+            </span>
+          )}
         </label>
         <textarea
           name="body"
@@ -249,7 +257,7 @@ function Write() {
         <div>
           {markdown.length > 0 && (
             <h4 className="mb-4 text-xl font-bold text-gray-400">
-              Body Preview
+              Content Preview
             </h4>
           )}
         </div>

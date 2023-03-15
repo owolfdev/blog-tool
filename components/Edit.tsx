@@ -12,6 +12,7 @@ import {
 } from "@supabase/auth-helpers-react";
 import { useSupabase } from "../utils/supabase/useSupabase";
 import { useRouter } from "next/router";
+import { countWords } from "../utils/count-words";
 
 interface BlogPostData {
   id: string;
@@ -225,8 +226,15 @@ function Edit({ postData }: any) {
         }
         value={blogPostData?.excerpt}
       ></textarea>
-      <label className="mt-0 mb-0" htmlFor="content">
-        Content:
+      <label className="mt-0 mb-0" htmlFor="body">
+        Content{" "}
+        {blogPostData?.content && (
+          <span>
+            {" "}
+            {`(`}
+            {countWords(blogPostData.content)} words{`)`}:
+          </span>
+        )}
       </label>
       <textarea
         name="content"
