@@ -1,5 +1,5 @@
 import { useContext } from "react";
-//import { DataContext } from "../context/DataContext";
+import { DataContext } from "../../context/DataContext";
 
 import {
   useSession,
@@ -11,12 +11,12 @@ export const useSupabase = () => {
   const session = useSession();
   const supabase = useSupabaseClient();
   const user = useUser();
-  // const dataContext = useContext(DataContext);
+  const dataContext = useContext(DataContext);
 
   async function getPosts() {
     try {
       let { data, error, status } = await supabase
-        .from("posts")
+        .from(`${dataContext.table}`)
         .select()
         .order("published_date", { ascending: false });
       if (error && status !== 406) {
@@ -37,7 +37,7 @@ export const useSupabase = () => {
   async function getPublishedPosts() {
     try {
       let { data } = await supabase
-        .from("posts")
+        .from(`${dataContext.table}`)
         .select()
         .lte("published_date", new Date().toISOString())
         .order("published_date", { ascending: false });
@@ -52,7 +52,10 @@ export const useSupabase = () => {
   async function getPost(slug) {
     console.log("id from getPost:", slug);
     try {
-      let { data } = await supabase.from("posts").select().eq("slug", slug);
+      let { data } = await supabase
+        .from(`${dataContext.table}`)
+        .select()
+        .eq("slug", slug);
       console.log("data from getPost:", data);
       return data;
     } finally {
@@ -62,7 +65,10 @@ export const useSupabase = () => {
   async function getPostForEdit(slug) {
     console.log("id from getPost:", slug);
     try {
-      let { data } = await supabase.from("posts").select().eq("id", slug);
+      let { data } = await supabase
+        .from(`${dataContext.table}`)
+        .select()
+        .eq("id", slug);
       console.log("data from getPost:", data);
       return data;
     } finally {
@@ -92,7 +98,7 @@ export const useSupabase = () => {
     console.log("updatePost(post):", post);
     try {
       let { error } = await supabase
-        .from("posts")
+        .from(`${dataContext.table}`)
         .upsert(post)
         .eq("id", post.id);
       console.log(error);
@@ -112,7 +118,7 @@ export const useSupabase = () => {
     console.log("deletePost(post):", postId);
     try {
       let { data, error } = await supabase
-        .from("posts")
+        .from(`${dataContext.table}`)
         .delete()
         .eq("id", postId);
       console.log(error);
@@ -213,7 +219,7 @@ export const useSupabase = () => {
     console.log("slug from getPost:", title);
     try {
       let { data } = await supabase
-        .from("posts")
+        .from(`${dataContext.table}`)
         .select()
         .ilike("title", title);
       console.log("data from getPost:", data);
