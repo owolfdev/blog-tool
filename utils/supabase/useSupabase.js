@@ -86,14 +86,14 @@ export const useSupabase = () => {
   async function insertPost(post) {
     //console.log("insertPost(post):", post);
     try {
-      let { error } = await supabase.from("posts").upsert(post);
+      let { error } = await supabase.from(`${dataContext.table}`).upsert(post);
       console.log(error);
     } finally {
     }
   }
 
   async function insertPostForEdit(post) {
-    //console.log("insertPost(post):", post);
+    console.log("insertPost(post):", post);
 
     console.log("updatePost(post):", post);
     try {

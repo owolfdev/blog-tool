@@ -104,7 +104,7 @@ function Navigation() {
           </Link>
           <div className="hidden space-x-4 underline sm:flex">
             <Link href={`/blog/create`}>Create</Link>
-            <Link href={`/all-posts`}>All Blog Posts</Link>
+            <Link href={`/all-posts`}>All Posts</Link>
             <Link href={`/settings`}>Settings</Link>
           </div>
         </div>

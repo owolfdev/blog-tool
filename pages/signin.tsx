@@ -2,6 +2,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
+import Layout from "@/components/Layout";
 
 const Home = () => {
   const session = useSession();
@@ -26,18 +27,20 @@ const Home = () => {
   }, [session, supabase]);
 
   return (
-    <div className="w-full p-10">
-      {!session ? (
-        <Auth
-          supabaseClient={supabase}
-          appearance={{ theme: ThemeSupa }}
-          theme="dark"
-          providers={["google"]}
-        />
-      ) : (
-        <p>Account page will go here.</p>
-      )}
-    </div>
+    <Layout title="Settings">
+      <div className="w-full p-10">
+        {!session ? (
+          <Auth
+            supabaseClient={supabase}
+            appearance={{ theme: ThemeSupa }}
+            theme="dark"
+            providers={["google"]}
+          />
+        ) : (
+          <p>Account page will go here.</p>
+        )}
+      </div>
+    </Layout>
   );
 };
 
