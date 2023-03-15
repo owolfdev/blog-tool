@@ -95,99 +95,79 @@ function Navigation() {
     }
   };
 
-  // return (
-  //   <nav className="flex items-center px-5 py-5 space-x-8">
-  //     <Link href={`/`}>
-  //       <h1 className="text-4xl font-bold text-center">Blog Tool</h1>
-  //     </Link>
-  //     <div className="flex space-x-4 underline">
-  //       <Link href={`/blog/create`}>Create</Link>
-  //       <Link href={`/data-grid`}>All Blog Posts</Link>
-  //     </div>
-  //     <div className="px-2 bg-gray-300 border border-gray-500 rounded ">
-  //       {!user ? (
-  //         <Link href={`/signin`}>Sign In</Link>
-  //       ) : (
-  //         <button onClick={() => supabase.auth.signOut()}>Sign Out</button>
-  //       )}
-  //     </div>
-  //     <div className="text-sm text-gray-500">
-  //       {user && user.email && user.email}
-  //       {!session && "You need to sign in to make changes"}
-  //     </div>
-  //   </nav>
-  // );
-
   return (
-    <nav className="flex items-center justify-between px-5 py-5">
-      <div className="flex items-center space-x-8">
-        <Link href={`/`}>
-          <h1 className="text-4xl font-bold text-center">Blog Tool</h1>
-        </Link>
-        <div className="hidden space-x-4 underline sm:flex">
-          <Link href={`/blog/create`}>Create</Link>
-          <Link href={`/all-posts`}>All Blog Posts</Link>
-          <Link href={`/setting`}>Setting</Link>
+    <nav>
+      <div className="flex items-center justify-between px-5 py-5">
+        <div className="flex items-center space-x-8">
+          <Link href={`/`}>
+            <h1 className="text-4xl font-bold text-center">Blog Tool</h1>
+          </Link>
+          <div className="hidden space-x-4 underline sm:flex">
+            <Link href={`/blog/create`}>Create</Link>
+            <Link href={`/all-posts`}>All Blog Posts</Link>
+            <Link href={`/setting`}>Setting</Link>
+          </div>
         </div>
-      </div>
 
-      <div className="items-center hidden space-x-8 sm:flex">
-        <div className="px-2 bg-gray-300 border border-gray-500 rounded ">
-          {!user ? (
-            <Link href={`/signin`}>Sign In</Link>
-          ) : (
-            <button onClick={() => supabase.auth.signOut()}>Sign Out</button>
-          )}
+        <div className="items-center hidden space-x-8 sm:flex">
+          <div className="px-2 bg-gray-300 border border-gray-500 rounded ">
+            {!user ? (
+              <Link href={`/signin`}>Sign In</Link>
+            ) : (
+              <button onClick={() => supabase.auth.signOut()}>Sign Out</button>
+            )}
+          </div>
+          <div className="text-sm text-gray-500 ">
+            {user && user.email && user.email}
+            {!session && "You need to sign in to make changes"}
+          </div>{" "}
         </div>
-        <div className="text-sm text-gray-500 ">
-          {user && user.email && user.email}
-          {!session && "You need to sign in to make changes"}
-        </div>{" "}
+        {/* hamburger menu */}
+        <div className="z-20 ">
+          <div className="sm:hidden">
+            <button id="hamburger-menu">
+              <GiHamburgerMenu
+                size={26}
+                onClick={() => {
+                  setIsMenuOpen(!isMenuOpen);
+                  console.log(isMenuOpen);
+                }}
+              />
+            </button>
+            {/* menu old position */}
+          </div>
+        </div>
       </div>
-      {/* hamburger menu */}
-      <div>
-        <div className="sm:hidden">
-          <button id="hamburger-menu">
-            <GiHamburgerMenu
-              size={26}
-              onClick={() => {
-                setIsMenuOpen(!isMenuOpen);
-                console.log(isMenuOpen);
-              }}
-            />
-          </button>
-          {isMenuOpen && (
-            <div
-              id="popup"
-              className="fixed p-5 font-bold text-white bg-gray-500 border-2 border-black rounded top-12 right-5"
-            >
-              <div className="flex flex-col space-y-2">
-                <div id="home" onClick={handleMobileNavigate}>
-                  Home
-                </div>
-                {!session ? (
-                  <div id="sign-in" onClick={handleMobileNavigate}>
-                    Sign In
-                  </div>
-                ) : (
-                  <div id="sign-in" onClick={() => supabase.auth.signOut()}>
-                    Sign Out
-                  </div>
-                )}
-                <div id="create" onClick={handleMobileNavigate}>
-                  Create
-                </div>
-                <div id="all-posts" onClick={handleMobileNavigate}>
-                  All Posts
-                </div>
-                <div id="settings" onClick={handleMobileNavigate}>
-                  Settings
-                </div>
-              </div>
+      {isMenuOpen && (
+        <div
+          id="popup"
+          className="px-6 pb-6 font-semibold text-right transition-all duration-500 ease-in-out transform shadow-lg slide-in"
+        >
+          <div className="flex flex-col space-y-2">
+            <div id="home" onClick={handleMobileNavigate}>
+              Home
             </div>
-          )}
+            {!session ? (
+              <div id="sign-in" onClick={handleMobileNavigate}>
+                Sign In
+              </div>
+            ) : (
+              <div id="sign-in" onClick={() => supabase.auth.signOut()}>
+                Sign Out
+              </div>
+            )}
+            <div id="create" onClick={handleMobileNavigate}>
+              Create
+            </div>
+            <div id="all-posts" onClick={handleMobileNavigate}>
+              All Posts
+            </div>
+            <div id="settings" onClick={handleMobileNavigate}>
+              Settings
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 }
