@@ -1,4 +1,10 @@
-import React, { useState, useEffect, ChangeEvent, useRef, use } from "react";
+import React, {
+  useState,
+  useEffect,
+  ChangeEvent,
+  useRef,
+  useContext,
+} from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import DatePicker from "react-datepicker";
@@ -12,6 +18,7 @@ import {
   useSession,
 } from "@supabase/auth-helpers-react";
 import { useSupabase } from "../utils/supabase/useSupabase";
+import { DataContext } from "@/context/DataContext";
 
 interface BlogPostData {
   title: string;
@@ -32,7 +39,7 @@ function Write() {
   const supabase = useSupabaseClient();
   const user = useUser();
   const session = useSession();
-
+  const dataContext = useContext(DataContext);
   const [authorized, setAuthorized] = useState(false);
 
   const { getPosts, getPublishedPosts, writeBlogPostToSupabase } =
