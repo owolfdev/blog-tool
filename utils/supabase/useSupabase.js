@@ -228,6 +228,23 @@ export const useSupabase = () => {
     }
   }
 
+  async function tableExists(tableName) {
+    console.log("tableExists(tableName):", tableName);
+    try {
+      const { data } = await supabase.from(tableName).select("*").limit(1);
+      if (data == null) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      if (error) {
+        return false;
+      } else {
+        throw error;
+      }
+    }
+  }
+
   return {
     getPosts,
     getPost,
@@ -236,5 +253,6 @@ export const useSupabase = () => {
     writeBlogPostToSupabase,
     updatePost,
     deletePost,
+    tableExists,
   };
 };

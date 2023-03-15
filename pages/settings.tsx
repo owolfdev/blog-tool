@@ -1,17 +1,25 @@
 import React, { useEffect, useContext, useState } from "react";
 import { DataContext } from "@/context/DataContext";
 import Layout from "@/components/Layout";
+import { useSupabase } from "@/utils/supabase/useSupabase";
+import { createClient } from "@supabase/supabase-js";
 
 function Settings() {
   const { table, setTable } = useContext(DataContext);
   const [currentTable, setCurrentTable] = useState("");
+  const { tableExists } = useSupabase();
 
   useEffect(() => {
     console.log("date", table);
   }, [table]);
 
-  const handleChangeTable = () => {
-    setTable(currentTable);
+  const handleChangeTable = async () => {
+    const table = await tableExists(currentTable);
+    if (table) {
+      setTable(currentTable);
+    } else {
+      alert(`table "${currentTable}" does not exist`);
+    }
   };
 
   return (
