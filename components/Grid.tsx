@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { AgGridReact } from "ag-grid-react";
 import * as agGrid from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { useRouter } from "next/router";
+import { DataContext } from "@/context/DataContext";
 
 interface RowData {
   athlete: string;
@@ -26,6 +27,7 @@ const Grid = ({ posts }: any) => {
     null
   );
   const router = useRouter();
+  const dataContext = useContext(DataContext);
 
   useEffect(() => {
     console.log("posts", posts);
