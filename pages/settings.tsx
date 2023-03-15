@@ -8,7 +8,6 @@ function Settings() {
 
   useEffect(() => {
     console.log("date", table);
-    setCurrentTable(table);
   }, [table]);
 
   const handleChangeTable = () => {
@@ -20,7 +19,7 @@ function Settings() {
       <div className="mb-5">
         <p>
           <span className="font-bold">Current Table: </span>
-          {currentTable}
+          {table}
         </p>
       </div>
       <div className="flex flex-col items-start justify-start space-y-3 ">
@@ -29,7 +28,7 @@ function Settings() {
           name="table-name"
           type="text"
           className="p-2 border-4 border-blue-500 rounded"
-          onChange={(e) => setTable(e.target.value)}
+          onChange={(e) => setCurrentTable(e.target.value)}
         />
         <button
           onClick={handleChangeTable}
