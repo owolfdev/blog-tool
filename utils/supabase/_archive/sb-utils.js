@@ -136,7 +136,7 @@ async function generateSlug(title) {
   console.log("slug:", slug);
 
   const formattedSlug = await getPostsForSlugTest(title).then((data) => {
-    console.log("data from getPost:", data);
+    //console.log("data from getPost:", data);
     if (data.length > 0) {
       console.log("data.length:", data.length);
       console.log("slug + data.length:", slug + "-" + data.length);

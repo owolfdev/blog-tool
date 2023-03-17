@@ -9,10 +9,11 @@ import { DataContext } from "../context/DataContext";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
-  const { getPosts, getPublishedPosts } = useSupabase();
+  const { getPosts, getPublishedPosts, tableExists } = useSupabase();
   const dataContext = useContext(DataContext);
 
   useEffect(() => {
+    testTableExists();
     getPublishedPosts().then((data: any) => {
       //console.log("data", data);
       setPosts(data);
@@ -22,6 +23,14 @@ export default function Home() {
   useEffect(() => {
     //console.log("publishedPosts", posts);
   }, [posts]);
+
+  const testTableExists = async () => {
+    const theTableExists = await tableExists(dataContext.table);
+    if (!theTableExists) {
+      alert(`Table ${dataContext.table} does not exist`);
+      return;
+    }
+  };
 
   return (
     <>
