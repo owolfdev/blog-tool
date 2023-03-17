@@ -12,6 +12,16 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { DataContext } from "@/context/DataContext";
 import { countWords } from "../../utils/count-words";
 
+import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
+import { serialize } from "next-mdx-remote/serialize";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeHighlight from "rehype-highlight";
+
+import YouTube from "../../components/YouTube";
+import Image from "next/image";
+import IFrame from "../../components/IFrame";
+
 interface Post {
   id: string;
   title: string;
@@ -27,6 +37,7 @@ export default function BlogsPage() {
   const user = useUser();
   const router = useRouter();
   const dataContext = useContext(DataContext);
+  const [mdxSource, setMdxSource] = useState<MDXRemoteSerializeResult>();
 
   useEffect(() => {
     const { slug } = router.query;
@@ -34,6 +45,23 @@ export default function BlogsPage() {
       slug && setPost(data[0]);
     });
   }, [router.query.slug]);
+
+  useEffect(() => {
+    post && getMDX(post);
+  }, [post]);
+
+  const getMDX = async (post: any) => {
+    const mdx = await serialize(post.content, {
+      mdxOptions: {
+        rehypePlugins: [
+          rehypeSlug,
+          [rehypeAutolinkHeadings, { behavior: "wrap" }],
+          rehypeHighlight,
+        ],
+      },
+    });
+    setMdxSource(mdx);
+  };
 
   const handleDelete = async () => {
     //console.log("delete post: ", post);
@@ -54,25 +82,9 @@ export default function BlogsPage() {
             <p>Post Id: {post?.id}</p>
             <p>Current Table: {dataContext.table} </p>
           </div>
-          <ReactMarkdown
-            rehypePlugins={[rehypeRaw, remarkBreaks]}
-            skipHtml={false}
-            children={post?.content!}
-            components={{
-              p: ({ children }) => <p className="mb-4 ">{children}</p>,
-              h1: ({ children }) => (
-                <h1 className="mb-4 text-5xl font-bold">{children}</h1>
-              ),
-              h2: ({ children }) => (
-                <h2 className="mb-4 text-3xl font-bold">{children}</h2>
-              ),
-              h3: ({ children }) => (
-                <h3 className="mb-4 text-2xl font-bold">{children}</h3>
-              ),
-              // and so on for other heading levels
-            }}
-          />
-          {/*  */}
+          {mdxSource && (
+            <MDXRemote {...mdxSource} components={{ YouTube, Image, IFrame }} />
+          )}
         </div>
 
         <div className="flex space-x-3">
