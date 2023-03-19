@@ -1,67 +1,72 @@
-import Blogs from "../../components/BlogPosts";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import Layout from "../../components/Layout";
-import { formatDate } from "../../utils/format-date";
-import ReactMarkdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
-import remarkBreaks from "remark-breaks";
-import { useEffect, useState, useContext } from "react";
-import { useSupabase } from "../../utils/supabase/useSupabase";
-import { useUser } from "@supabase/auth-helpers-react";
-import { DataContext } from "@/context/DataContext";
-import { countWords } from "../../utils/count-words";
-
+// pages/mdx-page.tsx
+import React, { ReactNode, ComponentType, HTMLAttributes } from "react";
+import { MDXProvider } from "@mdx-js/react";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
-import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import matter from "gray-matter";
 import rehypeHighlight from "rehype-highlight";
-
-import YouTube from "../../components/YouTube";
+import "highlight.js/styles/atom-one-dark.css";
+import remarkGfm from "remark-gfm";
+import { useState, useEffect, useContext } from "react";
+import { DataContext } from "@/context/DataContext";
+import { getPost } from "@/utils/supabase/sb-utils";
+import { GetServerSideProps } from "next";
 import Image from "next/image";
-import IFrame from "../../components/IFrame";
+import Layout from "@/components/Layout";
+import { useRouter } from "next/router";
+import { countWords } from "../../utils/count-words";
+import { formatDate } from "../../utils/format-date";
+import { YouTube } from "@/components/YouTube";
+import Link from "next/link";
+import { useSupabase } from "@/utils/supabase/useSupabase";
+import { useUser } from "@supabase/auth-helpers-react";
 
-interface Post {
-  id: string;
-  title: string;
-  slug: string;
-  published_date: string;
-  author: string;
-  content: string;
+interface MdxPageProps {
+  mdxSource: MDXRemoteSerializeResult;
+  post: any;
 }
 
-export default function BlogsPage() {
+interface MDXComponents {
+  [key: string]: ComponentType<any>;
+}
+
+const components: MDXComponents = {
+  h1: (props: HTMLAttributes<HTMLHeadingElement>) => (
+    <h1 className="mb-4 text-5xl font-bold" {...props} />
+  ),
+  p: (props: HTMLAttributes<HTMLParagraphElement>) => (
+    <p className="mb-4" {...props} />
+  ),
+  Image: (props: any) => (
+    <div className="mb-4">
+      <Image
+        src={props.src || ""}
+        alt={props.alt || ""}
+        width={props.width || "auto"}
+        height={props.height || "auto"}
+        {...props}
+      />
+      {props.caption && <p className="text-gray-500 ">{props.caption}</p>}
+    </div>
+  ),
+  YouTube: YouTube,
+  pre: (props: any) => <div className="mb-4">{props.children}</div>,
+  code: (props: any) => (
+    <pre>
+      <code {...props} />
+    </pre>
+  ),
+};
+
+const MdxPage: React.FC<MdxPageProps> = ({ mdxSource, post }) => {
+  const dataContext = useContext(DataContext);
   const { getPost, deletePost } = useSupabase();
-  const [post, setPost] = useState<Post>();
   const user = useUser();
   const router = useRouter();
-  const dataContext = useContext(DataContext);
-  const [mdxSource, setMdxSource] = useState<MDXRemoteSerializeResult>();
 
   useEffect(() => {
-    const { slug } = router.query;
-    getPost(slug).then((data: any) => {
-      slug && setPost(data[0]);
-    });
-  }, [router.query.slug]);
-
-  useEffect(() => {
-    post && getMDX(post);
-  }, [post]);
-
-  const getMDX = async (post: any) => {
-    const mdx = await serialize(post.content, {
-      mdxOptions: {
-        rehypePlugins: [
-          rehypeSlug,
-          [rehypeAutolinkHeadings, { behavior: "wrap" }],
-          rehypeHighlight,
-        ],
-      },
-    });
-    setMdxSource(mdx);
-  };
+    console.log("post", post);
+  }, []);
 
   const handleDelete = async () => {
     //console.log("delete post: ", post);
@@ -71,33 +76,46 @@ export default function BlogsPage() {
   };
 
   return (
-    <>
-      <Layout title={post?.title}>
-        <div className="mb-5">
-          {/* {JSON.stringify(postData)} */}
-          <div className="mb-5 text-sm text-gray-500">
-            <p>Word Count: {post?.content && countWords(post?.content)}</p>
-            <p>Published Date: {formatDate(post?.published_date)}</p>
-            <p>Author: {post?.author}</p>
-            <p>Post Id: {post?.id}</p>
-            <p>Current Table: {dataContext.table} </p>
-          </div>
-          {mdxSource && (
-            <MDXRemote {...mdxSource} components={{ YouTube, Image, IFrame }} />
-          )}
+    <Layout title={"billy"}>
+      <div className="mb-5">
+        <div className="mb-5 text-sm text-gray-500">
+          <p>Word Count: {post?.content && countWords(post?.content)}</p>
+          <p>Published Date: {formatDate(post?.published_date)}</p>
+          <p>Author: {post?.author}</p>
+          <p>Post Id: {post?.id}</p>
+          <p>Current Table: {dataContext.table} </p>
         </div>
-
-        <div className="flex space-x-3">
-          <div className="underline">
-            <Link href={`/edit/${post?.id}`}>Edit Post</Link>
-          </div>
-          {user && (
-            <button className="underline" onClick={handleDelete}>
-              Delete Post
-            </button>
-          )}
+        <MDXProvider components={components}>
+          <MDXRemote {...mdxSource} />
+        </MDXProvider>
+      </div>
+      <div className="flex space-x-3">
+        <div className="underline">
+          <Link href={`/edit/${post?.id}`}>Edit Post</Link>
         </div>
-      </Layout>
-    </>
+        {user && (
+          <button className="underline" onClick={handleDelete}>
+            Delete Post
+          </button>
+        )}
+      </div>
+    </Layout>
   );
-}
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const slug = context.params?.slug as string;
+  const postData = await getPost(slug);
+  const post = postData && postData[0];
+  const { content } = matter(post?.content);
+  const mdxSource = await serialize(post?.content, {
+    mdxOptions: {
+      rehypePlugins: [rehypeHighlight],
+    },
+  });
+  return {
+    props: { mdxSource, post },
+  };
+};
+
+export default MdxPage;

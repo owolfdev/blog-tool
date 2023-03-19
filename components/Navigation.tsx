@@ -10,6 +10,7 @@ import {
 // type Profiles = Database["public"]["Tables"]["profiles"]["Row"];
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useRouter } from "next/router";
+import { IoSettingsSharp } from "react-icons/io5";
 
 function Navigation() {
   const supabase = useSupabaseClient();
@@ -102,10 +103,12 @@ function Navigation() {
           <Link href={`/`}>
             <h1 className="text-4xl font-bold text-center">Blog Tool</h1>
           </Link>
-          <div className="hidden space-x-4 underline sm:flex">
+          <div className="items-center hidden space-x-4 underline sm:flex">
             <Link href={`/blog/create`}>Create</Link>
             <Link href={`/all-posts`}>All Posts</Link>
-            <Link href={`/settings`}>Settings</Link>
+            <Link href={`/settings`}>
+              <IoSettingsSharp size={25} />
+            </Link>
           </div>
         </div>
 

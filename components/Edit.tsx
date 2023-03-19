@@ -249,12 +249,12 @@ function Edit({ postData }: any) {
         }
         value={blogPostData?.content}
       ></textarea>
-      <div>
+      {/* <div>
         {markdown.length > 0 && (
           <h4 className="mb-4 text-xl font-bold text-gray-400">Body Preview</h4>
         )}
-      </div>
-      <ReactMarkdown
+      </div> */}
+      {/* <ReactMarkdown
         rehypePlugins={[rehypeRaw]}
         skipHtml={false}
         children={markdown}
@@ -271,7 +271,7 @@ function Edit({ postData }: any) {
           ),
           // and so on for other heading levels
         }}
-      />
+      /> */}
       <div className="h-5"></div>
       <button
         className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 disabled:bg-gray-500 disabled:text-gray-300"

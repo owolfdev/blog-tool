@@ -10,12 +10,20 @@ const GridPage = () => {
   const { getPosts } = useSupabase();
   const dataContext = useContext(DataContext);
 
+  // useEffect(() => {
+  //   getPosts().then((data: any) => {
+  //     //console.log("data", data);
+  //     setPosts(data);
+  //   });
+  // }, []);
+
   useEffect(() => {
-    getPosts().then((data: any) => {
-      //console.log("data", data);
-      setPosts(data);
-    });
-  }, []);
+    dataContext.table &&
+      getPosts().then((data: any) => {
+        setPosts(data);
+      });
+  }, [dataContext.table]);
+
   return (
     <Layout title="All Blog Posts">
       <div className="mb-5">

@@ -31,3 +31,11 @@
   height: 100%;
   border: 0;
 }
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1rem !important;
+  background: #2b2b2b;
+  width: 100%;
+}

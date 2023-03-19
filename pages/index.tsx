@@ -13,24 +13,13 @@ export default function Home() {
   const dataContext = useContext(DataContext);
 
   useEffect(() => {
-    testTableExists();
-    getPublishedPosts().then((data: any) => {
-      //console.log("data", data);
-      setPosts(data);
-    });
-  }, []);
+    console.log("dataContext.table from Index", dataContext.table);
 
-  useEffect(() => {
-    //console.log("publishedPosts", posts);
-  }, [posts]);
-
-  const testTableExists = async () => {
-    const theTableExists = await tableExists(dataContext.table);
-    if (!theTableExists) {
-      alert(`Table ${dataContext.table} does not exist`);
-      return;
-    }
-  };
+    dataContext.table &&
+      getPublishedPosts().then((data: any) => {
+        setPosts(data);
+      });
+  }, [dataContext.table]);
 
   return (
     <>

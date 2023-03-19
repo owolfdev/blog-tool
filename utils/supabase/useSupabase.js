@@ -35,9 +35,13 @@ export const useSupabase = () => {
   }
 
   async function getPublishedPosts() {
+    console.log(
+      "dataContext.table from get published posts:",
+      dataContext.table
+    );
     try {
       let { data } = await supabase
-        .from(`${dataContext.table}`)
+        .from(dataContext.table)
         .select()
         .lte("published_date", new Date().toISOString())
         .order("published_date", { ascending: false });
@@ -50,7 +54,7 @@ export const useSupabase = () => {
   }
 
   async function getPost(slug) {
-    console.log("id from getPost:", slug);
+    console.log("slug from getPost:", slug);
     try {
       let { data } = await supabase
         .from(`${dataContext.table}`)

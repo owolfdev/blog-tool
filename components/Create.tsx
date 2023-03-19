@@ -244,7 +244,7 @@ function Write() {
           name="body"
           id="body"
           ref={(el) => (inputRefs.current.body = el)}
-          placeholder="Please enter the content of the blog post. You can use markdown."
+          placeholder="Please enter the content of the blog post. You can use markdown or MDX."
           cols={30}
           rows={10}
           className="p-2 border-4 border-blue-500 rounded"
@@ -254,14 +254,14 @@ function Write() {
           value={blogPostData.body}
           required
         ></textarea>
-        <div>
+        {/* <div>
           {markdown.length > 0 && (
             <h4 className="mb-4 text-xl font-bold text-gray-400">
               Content Preview
             </h4>
           )}
-        </div>
-        <ReactMarkdown
+        </div> */}
+        {/* <ReactMarkdown
           rehypePlugins={[rehypeRaw]}
           skipHtml={false}
           children={markdown}
@@ -278,7 +278,7 @@ function Write() {
             ),
             // and so on for other heading levels
           }}
-        />
+        /> */}
         <div className="h-5"></div>
         <button
           type="submit"

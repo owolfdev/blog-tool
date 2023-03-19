@@ -1,12 +1,12 @@
 const { createClient } = require("@supabase/supabase-js");
-// import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
 
-require("dotenv").config();
+// require("dotenv").config();
 
-const smmry = require("smmry")({
-  SM_API_KEY: "AB9D0C21AC",
-  SM_LENGTH: 2,
-});
+// const smmry = require("smmry")({
+//   SM_API_KEY: "AB9D0C21AC",
+//   SM_LENGTH: 2,
+// });
 
 async function getPosts() {
   try {
@@ -36,10 +36,13 @@ async function getPublishedPosts() {
   }
 }
 
-async function getPost(slug) {
+export async function getPost(slug) {
   console.log("id from getPost:", slug);
   try {
-    let { data } = await supabase.from("posts").select().eq("slug", slug);
+    let { data } = await supabase
+      .from("posts_for_test")
+      .select()
+      .eq("slug", slug);
     console.log("data from getPost:", data);
     return data;
   } finally {
