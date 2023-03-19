@@ -73,30 +73,6 @@ function Edit({ postData }: any) {
     console.log("Blog Post Data:", blogPostData);
   }, [blogPostData]);
 
-  // const CustomDatePickerInput = forwardRef<
-  //   HTMLInputElement,
-  //   React.InputHTMLAttributes<HTMLInputElement>
-  // >(({ value, onClick }, ref) => (
-  //   <div className="relative">
-  //     <div className="absolute top-0 bottom-0 left-0 flex items-center pl-2">
-  //       <svg
-  //         className="w-4 h-4 text-gray-400 fill-current"
-  //         xmlns="http://www.w3.org/2000/svg"
-  //         viewBox="0 0 20 20"
-  //       >
-  //         <path d="M5 8l5 5 5-5H5z" />
-  //       </svg>
-  //     </div>
-  //     <input
-  //       className="h-10 pl-8 pr-2 border-4 border-blue-500 rounded"
-  //       type="text"
-  //       value={value}
-  //       onClick={onClick}
-  //       ref={ref}
-  //     />
-  //   </div>
-  // ));
-
   function handleDateChange(date: Date) {
     console.log("Date:", date);
     setPublishedDate(date);
@@ -270,7 +246,7 @@ function Edit({ postData }: any) {
         name="content"
         id="content"
         ref={(el) => (inputRefs.current.body = el)}
-        placeholder="Please enter the content of the blog post. You can use markdown."
+        placeholder="Please enter the content of the blog post. You can use markdown or MDX."
         cols={30}
         rows={10}
         className="p-2 border-4 border-blue-500 rounded"

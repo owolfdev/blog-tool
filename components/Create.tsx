@@ -5,12 +5,12 @@ import React, {
   useRef,
   useContext,
 } from "react";
-import ReactMarkdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
+// import ReactMarkdown from "react-markdown";
+// import rehypeRaw from "rehype-raw";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import moment from "moment";
-import remarkBreaks from "remark-breaks";
+// import moment from "moment";
+// import remarkBreaks from "remark-breaks";
 import {
   useUser,
   useSupabaseClient,
@@ -63,6 +63,42 @@ function Write() {
 
   useEffect(() => {
     console.log("Blog Post Data:", blogPostData);
+  }, [blogPostData]);
+
+  //work on this later.
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === "y") {
+        console.log("ctrl + y key pressed");
+        event.preventDefault();
+        const youtubeBlock = `<YouTube id='video id'/>`;
+        const bodyTextArea = document.getElementById(
+          "body"
+        ) as HTMLTextAreaElement;
+        if (bodyTextArea) {
+          const { selectionStart, selectionEnd } = bodyTextArea;
+          const currentValue = bodyTextArea.value;
+          const newValue =
+            currentValue.substring(0, selectionStart) +
+            youtubeBlock +
+            currentValue.substring(selectionEnd);
+          setBlogPostData((prevState) => ({
+            ...prevState,
+            body: newValue,
+          }));
+          bodyTextArea.focus();
+          bodyTextArea.setSelectionRange(
+            selectionStart + 9,
+            selectionStart + 9
+          );
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, [blogPostData]);
 
   function handleDateChange(date: Date) {
@@ -244,7 +280,7 @@ function Write() {
           name="body"
           id="body"
           ref={(el) => (inputRefs.current.body = el)}
-          placeholder="Please enter the content of the blog post. You can use markdown or MDX."
+          placeholder={`Please enter the content of the blog post. You can use markdown or MDX.\n\nHot Keys:\n\nAdd a YouTube element by pressing ctl+y.`}
           cols={30}
           rows={10}
           className="p-2 border-4 border-blue-500 rounded"
@@ -254,31 +290,7 @@ function Write() {
           value={blogPostData.body}
           required
         ></textarea>
-        {/* <div>
-          {markdown.length > 0 && (
-            <h4 className="mb-4 text-xl font-bold text-gray-400">
-              Content Preview
-            </h4>
-          )}
-        </div> */}
-        {/* <ReactMarkdown
-          rehypePlugins={[rehypeRaw]}
-          skipHtml={false}
-          children={markdown}
-          components={{
-            p: ({ children }) => <p className="mb-4 ">{children}</p>,
-            h1: ({ children }) => (
-              <h1 className="mb-4 text-5xl font-bold">{children}</h1>
-            ),
-            h2: ({ children }) => (
-              <h2 className="mb-4 text-3xl font-bold">{children}</h2>
-            ),
-            h3: ({ children }) => (
-              <h3 className="mb-4 text-2xl font-bold">{children}</h3>
-            ),
-            // and so on for other heading levels
-          }}
-        /> */}
+
         <div className="h-5"></div>
         <button
           type="submit"
