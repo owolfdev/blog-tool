@@ -32,7 +32,7 @@ interface BlogPostData {
   author_email: string;
 }
 
-function Write() {
+function Create() {
   const [blogPostData, setBlogPostData] = useState<Partial<BlogPostData>>({});
   const [markdown, setMarkdown] = useState("");
   const [publishedDate, setPublishedDate] = useState<Date | null>(null);
@@ -68,10 +68,20 @@ function Write() {
   //work on this later.
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.key === "y") {
-        console.log("ctrl + y key pressed");
+      if (event.ctrlKey) {
+        let newTextBlock = "";
+
+        if (event.key === "y") {
+          newTextBlock = `<YouTube id='YOUTUBE_VIDEO_ID'/>`;
+        } else if (event.key === "i") {
+          newTextBlock = `<UnsplashImage id="UNSPLASH_PHOTO_ID" />`;
+        } else {
+          return; // If the key is not 'y' or 'i', exit the function
+        }
+
+        console.log(`ctrl + ${event.key} key pressed`);
         event.preventDefault();
-        const youtubeBlock = `<YouTube id='video id'/>`;
+
         const bodyTextArea = document.getElementById(
           "body"
         ) as HTMLTextAreaElement;
@@ -80,7 +90,7 @@ function Write() {
           const currentValue = bodyTextArea.value;
           const newValue =
             currentValue.substring(0, selectionStart) +
-            youtubeBlock +
+            newTextBlock +
             currentValue.substring(selectionEnd);
           setBlogPostData((prevState) => ({
             ...prevState,
@@ -88,8 +98,8 @@ function Write() {
           }));
           bodyTextArea.focus();
           bodyTextArea.setSelectionRange(
-            selectionStart + 9,
-            selectionStart + 9
+            selectionStart + newTextBlock.length,
+            selectionStart + newTextBlock.length
           );
         }
       }
@@ -280,7 +290,7 @@ function Write() {
           name="body"
           id="body"
           ref={(el) => (inputRefs.current.body = el)}
-          placeholder={`Please enter the content of the blog post. You can use markdown or MDX.\n\nHot Keys:\n\nAdd a YouTube element by pressing ctl+y.`}
+          placeholder={`Please enter the content of the blog post. You can use markdown or MDX.\n\nHot Keys:\n\nAdd a YouTube element by pressing: ctl+y.\nAdd an Unsplash Image element by pressing: ctl+i`}
           cols={30}
           rows={10}
           className="p-2 border-4 border-blue-500 rounded"
@@ -311,4 +321,4 @@ function Write() {
   );
 }
 
-export default Write;
+export default Create;

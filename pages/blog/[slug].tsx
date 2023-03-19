@@ -22,6 +22,7 @@ import { useSupabase } from "@/utils/supabase/useSupabase";
 import { useUser } from "@supabase/auth-helpers-react";
 import ClipboardJS from "clipboard";
 import { Pre, Code } from "@/components/CodeBlock";
+import UnsplashImage from "@/components/UnsplashImage";
 
 function useClipboard(selector: string) {
   useEffect(() => {
@@ -68,6 +69,7 @@ const components: MDXComponents = {
   YouTube: YouTube,
   pre: Pre,
   code: Code,
+  UnsplashImage: UnsplashImage,
 };
 
 const MdxPage: React.FC<MdxPageProps> = ({ mdxSource, post }) => {
