@@ -118,18 +118,59 @@ const MdxPage: React.FC<MdxPageProps> = ({ mdxSource, post }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const slug = context.params?.slug as string;
-  const postData = await getPost(slug);
-  const post = postData && postData[0];
-  const { content } = matter(post?.content);
-  const mdxSource = await serialize(post?.content, {
-    mdxOptions: {
-      rehypePlugins: [rehypeHighlight],
-    },
-  });
-  return {
-    props: { mdxSource, post },
-  };
+  try {
+    const slug = context.params?.slug as string;
+    const postData = await getPost(slug);
+    const post = postData && postData[0];
+
+    // Check if the post exists, and return a 404 error if it doesn't.
+    if (!post) {
+      return {
+        notFound: true,
+      };
+    }
+
+    const { content } = matter(post?.content);
+    const mdxSource = await serialize(post?.content, {
+      mdxOptions: {
+        rehypePlugins: [rehypeHighlight],
+      },
+    });
+    return {
+      props: { mdxSource, post },
+    };
+  } catch (error) {
+    console.error("Error in getServerSideProps:", error);
+    return {
+      props: {
+        mdxSource: null,
+        post: null,
+      },
+    };
+  }
 };
+
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const slug = context.params?.slug as string;
+//   const postData = await getPost(slug);
+//   const post = postData && postData[0];
+
+//   // Check if the post exists, and return a 404 error if it doesn't.
+//   if (!post) {
+//     return {
+//       notFound: true,
+//     };
+//   }
+
+//   const { content } = matter(post?.content);
+//   const mdxSource = await serialize(post?.content, {
+//     mdxOptions: {
+//       rehypePlugins: [rehypeHighlight],
+//     },
+//   });
+//   return {
+//     props: { mdxSource, post },
+//   };
+// };
 
 export default MdxPage;
