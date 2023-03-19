@@ -71,7 +71,20 @@ const Grid = ({ posts }: any) => {
     { field: "title", filter: "agTextColumnFilter" },
     { field: "slug", filter: "agTextColumnFilter" },
     { field: "id", filter: "agTextColumnFilter" },
-    { field: "published_date", filter: "agTextColumnFilter" },
+    {
+      field: "published_date",
+      headerName: "Published",
+      filter: "agTextColumnFilter",
+      cellStyle: (params) => {
+        const date = new Date(params.value);
+        const today = new Date();
+        if (date > today) {
+          return { backgroundColor: "#FFF8DC" };
+        } else {
+          return { backgroundColor: "#90EE90" };
+        }
+      },
+    },
     { field: "author", filter: "agTextColumnFilter" },
     { field: "author_email", filter: "agTextColumnFilter" },
     { field: "description", filter: "agTextColumnFilter" },
@@ -134,7 +147,7 @@ const Grid = ({ posts }: any) => {
           }
           .ag-grid .ag-cell {
             padding: 0.5rem;
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #4b5563;
             border-color: #e5e7eb;
             line-height: 1.5;

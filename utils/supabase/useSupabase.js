@@ -211,7 +211,7 @@ export const useSupabase = () => {
       author: data.author,
       author_email: data.author_email,
       categories: categories,
-      published_date: data.publishedDate,
+      published_date: data.published_date,
       description: data.description,
       excerpt: data.excerpt,
       content: data.content,

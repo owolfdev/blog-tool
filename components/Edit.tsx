@@ -1,6 +1,10 @@
-import React, { useState, useEffect, ChangeEvent, useRef } from "react";
-import ReactMarkdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
+import React, {
+  useState,
+  useEffect,
+  ChangeEvent,
+  useRef,
+  forwardRef,
+} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
@@ -66,8 +70,32 @@ function Edit({ postData }: any) {
   }, [markdown]);
 
   useEffect(() => {
-    // console.log("Blog Post Data:", blogPostData);
+    console.log("Blog Post Data:", blogPostData);
   }, [blogPostData]);
+
+  // const CustomDatePickerInput = forwardRef<
+  //   HTMLInputElement,
+  //   React.InputHTMLAttributes<HTMLInputElement>
+  // >(({ value, onClick }, ref) => (
+  //   <div className="relative">
+  //     <div className="absolute top-0 bottom-0 left-0 flex items-center pl-2">
+  //       <svg
+  //         className="w-4 h-4 text-gray-400 fill-current"
+  //         xmlns="http://www.w3.org/2000/svg"
+  //         viewBox="0 0 20 20"
+  //       >
+  //         <path d="M5 8l5 5 5-5H5z" />
+  //       </svg>
+  //     </div>
+  //     <input
+  //       className="h-10 pl-8 pr-2 border-4 border-blue-500 rounded"
+  //       type="text"
+  //       value={value}
+  //       onClick={onClick}
+  //       ref={ref}
+  //     />
+  //   </div>
+  // ));
 
   function handleDateChange(date: Date) {
     console.log("Date:", date);
@@ -107,6 +135,8 @@ function Edit({ postData }: any) {
       excerpt: blogPostData?.excerpt ?? "",
       content: blogPostData?.content ?? "",
     };
+
+    console.log("date from handleEditBlogPost", data.published_date);
 
     const response: any = await updatePost(data);
 
@@ -249,29 +279,6 @@ function Edit({ postData }: any) {
         }
         value={blogPostData?.content}
       ></textarea>
-      {/* <div>
-        {markdown.length > 0 && (
-          <h4 className="mb-4 text-xl font-bold text-gray-400">Body Preview</h4>
-        )}
-      </div> */}
-      {/* <ReactMarkdown
-        rehypePlugins={[rehypeRaw]}
-        skipHtml={false}
-        children={markdown}
-        components={{
-          p: ({ children }) => <p className="mb-4 ">{children}</p>,
-          h1: ({ children }) => (
-            <h1 className="mb-4 text-5xl font-bold">{children}</h1>
-          ),
-          h2: ({ children }) => (
-            <h2 className="mb-4 text-3xl font-bold">{children}</h2>
-          ),
-          h3: ({ children }) => (
-            <h3 className="mb-4 text-2xl font-bold">{children}</h3>
-          ),
-          // and so on for other heading levels
-        }}
-      /> */}
       <div className="h-5"></div>
       <button
         className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 disabled:bg-gray-500 disabled:text-gray-300"
