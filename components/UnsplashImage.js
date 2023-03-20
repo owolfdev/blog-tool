@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-const UnsplashImage = ({ id }) => {
+const UnsplashImage = ({ id, caption }) => {
   const [photo, setPhoto] = useState(null);
 
   useEffect(() => {
@@ -26,15 +26,18 @@ const UnsplashImage = ({ id }) => {
   if (!photo) return null;
 
   return (
-    <Image
-      src={photo.urls.regular}
-      alt={photo.description}
-      width={photo.width}
-      height={photo.height}
-      placeholder="blur"
-      blurDataURL={photo.blur_hash}
-      quality={75}
-    />
+    <div className="mb-4">
+      <Image
+        src={photo.urls.regular}
+        alt={photo.description}
+        width={photo.width}
+        height={photo.height}
+        placeholder="blur"
+        blurDataURL={photo.blur_hash}
+        quality={75}
+      />
+      {caption && <p className="text-gray-500 ">{caption}</p>}
+    </div>
   );
 };
 

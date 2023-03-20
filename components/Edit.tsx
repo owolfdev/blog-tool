@@ -4,7 +4,9 @@ import React, {
   ChangeEvent,
   useRef,
   forwardRef,
+  useContext,
 } from "react";
+import { DataContext } from "@/context/DataContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
@@ -40,6 +42,8 @@ function Edit({ postData }: any) {
   const session = useSession();
   const router = useRouter();
 
+  const dataContext = useContext(DataContext);
+
   const [authorized, setAuthorized] = useState(false);
 
   const { updatePost } = useSupabase();
@@ -71,6 +75,54 @@ function Edit({ postData }: any) {
 
   useEffect(() => {
     console.log("Blog Post Data:", blogPostData);
+  }, [blogPostData]);
+
+  //work on this later.
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey) {
+        let newTextBlock = "";
+
+        if (event.key === "y") {
+          newTextBlock = `<YouTube id='YOUTUBE_VIDEO_ID'/>`;
+        } else if (event.key === "u") {
+          newTextBlock = `<UnsplashImage id="UNSPLASH_PHOTO_ID" caption='Image from Unsplash'/>`;
+        } else {
+          return; // If the key is not 'y' or 'i', exit the function
+        }
+
+        console.log(`ctrl + ${event.key} key pressed`);
+        console.log("newTextBlock:", newTextBlock);
+
+        event.preventDefault();
+
+        const bodyTextArea = document.getElementById(
+          "content"
+        ) as HTMLTextAreaElement;
+        if (bodyTextArea) {
+          const { selectionStart, selectionEnd } = bodyTextArea;
+          const currentValue = bodyTextArea.value;
+          const newValue =
+            currentValue.substring(0, selectionStart) +
+            newTextBlock +
+            currentValue.substring(selectionEnd);
+          setBlogPostData((prevState) => ({
+            ...prevState,
+            content: newValue,
+          }));
+          bodyTextArea.focus();
+          bodyTextArea.setSelectionRange(
+            selectionStart + newTextBlock.length,
+            selectionStart + newTextBlock.length
+          );
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, [blogPostData]);
 
   function handleDateChange(date: Date) {
@@ -126,7 +178,7 @@ function Edit({ postData }: any) {
 
       setTimeout(function () {
         toast?.classList.add("hidden");
-        router.push(`/blog/${data.slug}`);
+        router.push(`/blog/${data.slug}?table=${dataContext.table}`);
       }, 3000);
     }
   };

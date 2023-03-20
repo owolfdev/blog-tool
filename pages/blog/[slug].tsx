@@ -51,6 +51,15 @@ const components: MDXComponents = {
   h1: (props: HTMLAttributes<HTMLHeadingElement>) => (
     <h1 className="mb-4 text-5xl font-bold" {...props} />
   ),
+  h2: (props: HTMLAttributes<HTMLHeadingElement>) => (
+    <h1 className="mb-4 text-4xl font-bold" {...props} />
+  ),
+  h3: (props: HTMLAttributes<HTMLHeadingElement>) => (
+    <h1 className="mb-4 text-3xl font-bold" {...props} />
+  ),
+  h4: (props: HTMLAttributes<HTMLHeadingElement>) => (
+    <h1 className="mb-4 text-2xl font-bold" {...props} />
+  ),
   p: (props: HTMLAttributes<HTMLParagraphElement>) => (
     <p className="mb-4" {...props} />
   ),

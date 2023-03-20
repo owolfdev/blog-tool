@@ -73,8 +73,8 @@ function Create() {
 
         if (event.key === "y") {
           newTextBlock = `<YouTube id='YOUTUBE_VIDEO_ID'/>`;
-        } else if (event.key === "i") {
-          newTextBlock = `<UnsplashImage id="UNSPLASH_PHOTO_ID" />`;
+        } else if (event.key === "u") {
+          newTextBlock = `<UnsplashImage id="UNSPLASH_PHOTO_ID" caption='Image from Unsplash' />`;
         } else {
           return; // If the key is not 'y' or 'i', exit the function
         }
@@ -290,7 +290,7 @@ function Create() {
           name="body"
           id="body"
           ref={(el) => (inputRefs.current.body = el)}
-          placeholder={`Please enter the content of the blog post. You can use markdown or MDX.\n\nHot Keys:\n\nAdd a YouTube element by pressing: ctl+y.\nAdd an Unsplash Image element by pressing: ctl+i`}
+          placeholder={`Please enter the content of the blog post. You can use markdown or MDX.\n\nHot Keys:\n\nAdd a YouTube element by pressing: ctl+y.\nAdd an Unsplash Image element by pressing: ctl+u`}
           cols={30}
           rows={10}
           className="p-2 border-4 border-blue-500 rounded"

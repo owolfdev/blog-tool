@@ -8,7 +8,7 @@ const Layout = ({ children, title }: any) => {
         <Navigation />
       </header>
       <main className="px-10 pt-5 screen-minus-header-footer">
-        <h2 className="mb-6 text-3xl font-bold">{title}</h2>
+        <h1 className="mb-4 text-5xl font-bold">{title}</h1>
         {children}
       </main>
       <footer className="flex justify-center p-10">

@@ -115,7 +115,7 @@ const Grid = ({ posts }: any) => {
 
   const onRowClicked = (params: any) => {
     const { slug } = params.data;
-    router.push(`/blog/${slug}`);
+    router.push(`/blog/${slug}?table=${dataContext.table}`);
   };
 
   return (
