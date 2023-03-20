@@ -120,10 +120,11 @@ const MdxPage: React.FC<MdxPageProps> = ({ mdxSource, post }) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const slug = context.params?.slug as string;
-    const postData = await getPost(slug);
+    const table = context.query.table as string;
+
+    const postData = await getPost(slug, table);
     const post = postData && postData[0];
 
-    // Check if the post exists, and return a 404 error if it doesn't.
     if (!post) {
       return {
         notFound: true,
@@ -149,28 +150,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 };
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const slug = context.params?.slug as string;
-//   const postData = await getPost(slug);
-//   const post = postData && postData[0];
-
-//   // Check if the post exists, and return a 404 error if it doesn't.
-//   if (!post) {
-//     return {
-//       notFound: true,
-//     };
-//   }
-
-//   const { content } = matter(post?.content);
-//   const mdxSource = await serialize(post?.content, {
-//     mdxOptions: {
-//       rehypePlugins: [rehypeHighlight],
-//     },
-//   });
-//   return {
-//     props: { mdxSource, post },
-//   };
-// };
 
 export default MdxPage;

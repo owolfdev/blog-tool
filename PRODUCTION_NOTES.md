@@ -1,3 +1,7 @@
+issues:
+
+why are posts from sb table posts_for_bt_demo returning a 404?
+
 Notes:
 
 read files should be accessible to the public. That will take care of the useStaticProps issue.

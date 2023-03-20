@@ -67,7 +67,7 @@ export const useSupabase = () => {
   }
 
   async function getPostForEdit(slug) {
-    console.log("id from getPost:", slug);
+    console.log("slug from getPostForEdit:", slug);
     try {
       let { data } = await supabase
         .from(`${dataContext.table}`)

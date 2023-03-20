@@ -36,13 +36,10 @@ async function getPublishedPosts() {
   }
 }
 
-export async function getPost(slug) {
-  console.log("id from getPost:", slug);
+export async function getPost(slug, table) {
+  console.log("slug from getPost:", slug);
   try {
-    let { data } = await supabase
-      .from("posts_for_test")
-      .select()
-      .eq("slug", slug);
+    let { data } = await supabase.from(table).select().eq("slug", slug);
     console.log("data from getPost:", data);
     return data;
   } finally {
