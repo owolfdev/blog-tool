@@ -38,9 +38,22 @@ function useClipboard(selector: string) {
   }, [selector]);
 }
 
+interface Post {
+  id: string;
+  title: string;
+  content: string;
+  author: string;
+  published_date: string;
+  categories: string[];
+  excerpt: string;
+  description: string;
+  slug: string;
+  author_email: string;
+}
+
 interface MdxPageProps {
   mdxSource: MDXRemoteSerializeResult;
-  post: any;
+  post: Post;
 }
 
 interface MDXComponents {
@@ -146,6 +159,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         rehypePlugins: [rehypeHighlight],
       },
     });
+    console.log("post", post);
+
     return {
       props: { mdxSource, post },
     };
