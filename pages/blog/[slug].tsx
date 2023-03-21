@@ -20,23 +20,23 @@ import { YouTube } from "@/components/YouTube";
 import Link from "next/link";
 import { useSupabase } from "@/utils/supabase/useSupabase";
 import { useUser } from "@supabase/auth-helpers-react";
-import ClipboardJS from "clipboard";
+//import ClipboardJS from "clipboard";
 import { Pre, Code } from "@/components/CodeBlock";
 import UnsplashImage from "@/components/UnsplashImage";
 
-function useClipboard(selector: string) {
-  useEffect(() => {
-    const clipboard = new ClipboardJS(selector);
+// function useClipboard(selector: string) {
+//   useEffect(() => {
+//     const clipboard = new ClipboardJS(selector);
 
-    clipboard.on("success", (e) => {
-      e.clearSelection();
-    });
+//     clipboard.on("success", (e) => {
+//       e.clearSelection();
+//     });
 
-    return () => {
-      clipboard.destroy();
-    };
-  }, [selector]);
-}
+//     return () => {
+//       clipboard.destroy();
+//     };
+//   }, [selector]);
+// }
 
 interface Post {
   id: string;
