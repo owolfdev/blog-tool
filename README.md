@@ -1,1 +1,1 @@
-mdx compatible with the [remark][] ecosystem.
+Blog Tool MVP is a minimalistic blogging platform designed for testing and demo purposes. It enables Supabase authenticated users to add, edit, and manage blog posts within a Supabase database table. Users can switch between tables to organize content across different categories. Blog Tool MVP offers a simple solution for those seeking a basic yet functional blogging tool for their Supabase projects.
